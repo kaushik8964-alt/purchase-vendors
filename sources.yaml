@@ -1,0 +1,30 @@
+# page_url   : web page that links to the file (fetch.py finds the newest link matching link_regex)
+# direct_url : exact file URL (use if you know it)
+# Sources with neither are skipped (just drop your own file in data/raw/).
+sources:
+  - name: USFDA_DMF
+    page_url: https://www.fda.gov/drugs/drug-master-files-dmfs/list-drug-master-files-dmfs
+    link_regex: "\\.(xlsx|xls|csv)$"
+    file: data/raw/fda_dmf.xlsx
+    # VERIFY these header names against the downloaded file
+    columns: {vendor: "HOLDER", product: "SUBJECT", reference_id: "DMF#", status: "STATUS", certification: "TYPE"}
+
+  - name: WHO_PQ_API
+    # TODO: paste the WHO prequalified-APIs list page URL here (open it, copy from browser)
+    page_url: ""
+    link_regex: "\\.(xlsx|xls|csv)$"
+    file: data/raw/who_pq_api.xlsx
+    columns: {vendor: "Applicant", product: "INN", reference_id: "Reference number", country: "Country", certification: "Status"}
+
+  - name: EDQM_CEP
+    # EDQM needs a manual export from its certification database; drop the file in data/raw/
+    file: data/raw/edqm_cep.xlsx
+    columns: {vendor: "Holder", product: "Substance", reference_id: "Certificate number", country: "Country", certification: "Status"}
+
+  - name: CDSCO_IMPORT_REG
+    file: data/raw/cdsco_form41.xlsx
+    columns: {vendor: "Manufacturer", product: "Drug", reference_id: "RC number", country: "Country", certification: "Validity"}
+
+  - name: MY_OWN_VENDORS   # your contacts list; keep private
+    file: data/raw/my_vendors.csv
+    columns: {vendor: "vendor", product: "product", country: "country", email: "email", phone: "phone", website: "website", certification: "gmp_status"}
