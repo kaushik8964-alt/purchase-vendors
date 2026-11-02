@@ -4,10 +4,9 @@
 sources:
   - name: USFDA_DMF
     default_type: "Overseas manufacturer"
-    page_url: https://www.fda.gov/drugs/drug-master-files-dmfs/list-drug-master-files-dmfs
-    link_regex: "quarter|excel|xlsx|\\.xls"
-    file: data/raw/fda_dmf.xls
-    # VERIFY these header names against the downloaded file
+    # FDA blocks automatic download from GitHub, so this file is made on your computer: see prepare_fda.py
+    file: data/raw/fda_dmf.csv
+    # VERIFY these header names (prepare_fda.py prints the real ones)
     columns: {vendor: "HOLDER", product: "SUBJECT", reference_id: "DMF#", status: "STATUS", certification: "TYPE"}
 
   - name: WHO_PQ_API
