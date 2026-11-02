@@ -37,7 +37,7 @@ def main():
             if not urls: raise RuntimeError("no candidate links")
             done = False
             for url in urls[:8]:
-                r = requests.get(url, headers=HEADERS, timeout=180)
+                r = requests.get(url, headers={**HEADERS, "Referer": s.get("page_url", url)}, timeout=300)
                 print(f"  try {url} -> {r.status_code}, {len(r.content)//1024} KB, type {r.headers.get('content-type','?')}")
                 if r.ok and is_table_file(r.content):
                     p = pathlib.Path(s["file"]); p.parent.mkdir(parents=True, exist_ok=True)
@@ -47,6 +47,8 @@ def main():
         except Exception as e:
             print(f"FAIL {s['name']}: {e}", file=sys.stderr)
     print(f"{ok} source(s) downloaded")
+    if ok == 0 and any(s.get("page_url") or s.get("direct_url") for s in yaml.safe_load(open("sources.yaml"))["sources"]):
+        sys.exit("FETCH FAILED: nothing downloaded. Read the lines above (status 403 = site blocks GitHub servers).")
 
 if __name__ == "__main__":
     main()
