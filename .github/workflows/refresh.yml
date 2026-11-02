@@ -16,5 +16,5 @@ jobs:
       - run: python ingest.py
       - run: |
           git config user.name bot && git config user.email bot@users.noreply.github.com
-          git add vendors.db data/raw && git commit -m "weekly refresh" || echo "no changes"
+          git add vendors.db && git commit -m "weekly refresh" || echo "no changes"
           git push
