@@ -1,2 +1,4 @@
 data/raw/my_vendors.csv
 __pycache__/
+data/raw/*.xls
+data/raw/*.xlsx

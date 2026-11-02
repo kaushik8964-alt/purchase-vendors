@@ -3,29 +3,39 @@
 # Sources with neither are skipped (just drop your own file in data/raw/).
 sources:
   - name: USFDA_DMF
+    default_type: "Overseas manufacturer"
     page_url: https://www.fda.gov/drugs/drug-master-files-dmfs/list-drug-master-files-dmfs
-    link_regex: "xlsx|\\.xls|excel|dmf.?list"
-    file: data/raw/fda_dmf.xlsx
+    link_regex: "quarter|excel|xlsx|\\.xls"
+    file: data/raw/fda_dmf.xls
     # VERIFY these header names against the downloaded file
     columns: {vendor: "HOLDER", product: "SUBJECT", reference_id: "DMF#", status: "STATUS", certification: "TYPE"}
- 
+
   - name: WHO_PQ_API
+    default_type: "Overseas manufacturer"
     # TODO: paste the WHO prequalified-APIs list page URL here (open it, copy from browser)
     page_url: ""
     link_regex: "xlsx|\\.xls|excel|dmf.?list"
     file: data/raw/who_pq_api.xlsx
     columns: {vendor: "Applicant", product: "INN", reference_id: "Reference number", country: "Country", certification: "Status"}
- 
+
   - name: EDQM_CEP
+    default_type: "Overseas manufacturer"
     # EDQM needs a manual export from its certification database; drop the file in data/raw/
     file: data/raw/edqm_cep.xlsx
     columns: {vendor: "Holder", product: "Substance", reference_id: "Certificate number", country: "Country", certification: "Status"}
- 
+
   - name: CDSCO_IMPORT_REG
+    default_type: "Registered import source"
     file: data/raw/cdsco_form41.xlsx
     columns: {vendor: "Manufacturer", product: "Drug", reference_id: "RC number", country: "Country", certification: "Validity"}
- 
+
   - name: MY_OWN_VENDORS   # your contacts list; keep private
     file: data/raw/my_vendors.csv
-    columns: {vendor: "vendor", product: "product", country: "country", email: "email", phone: "phone", website: "website", certification: "gmp_status"}
- 
+    columns: {vendor: "vendor", product: "product", vendor_type: "type", state: "state", licence_no: "licence_no", country: "country", email: "email", phone: "phone", website: "website", certification: "gmp_status"}
+
+  # Indian distributors / traders. No national list exists: add one block per state list you obtain
+  # (wholesale licence holders, Pharmexcil members, etc.). Copy this block and edit the file/columns.
+  - name: STATE_LICENCES
+    default_type: "Indian wholesaler/distributor"
+    file: data/raw/state_wholesale_licences.csv
+    columns: {vendor: "Name of firm", state: "State", licence_no: "Licence No", status: "Validity", phone: "Phone", email: "Email"}

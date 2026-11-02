@@ -31,12 +31,17 @@ df = load()
 
 q = st.sidebar.text_input("Material / API name (e.g. paracetamol)")
 country = st.sidebar.multiselect("Country", sorted(df.country[df.country != ""].unique()))
+vtype = st.sidebar.multiselect("Type (manufacturer / distributor...)", sorted(df.vendor_type[df.vendor_type != ""].unique()))
+state = st.sidebar.multiselect("Indian state", sorted(df.state[df.state != ""].unique()))
 src = st.sidebar.multiselect("Source / certification", sorted(df.source.unique()))
 if q: df = df[df["product"].str.contains(q, case=False, na=False)]
 if country: df = df[df.country.isin(country)]
+if vtype: df = df[df.vendor_type.isin(vtype)]
+if state: df = df[df.state.isin(state)]
 if src: df = df[df.source.isin(src)]
 
-g = (df.groupby("vendor_key").agg(vendor=("vendor","first"), country=("country","first"),
+g = (df.groupby("vendor_key").agg(vendor=("vendor","first"), country=("country","first"), state=("state","max"),
+     type=("vendor_type", lambda s: ", ".join(sorted(set(x for x in s if x)))), licence_no=("licence_no","max"),
      products=("product", lambda s: ", ".join(sorted(set(s))[:8])),
      sources=("source", lambda s: ", ".join(sorted(set(s)))),
      n_sources=("source","nunique"), email=("email","max"), phone=("phone","max"), website=("website","max"))
