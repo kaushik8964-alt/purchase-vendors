@@ -13,6 +13,16 @@ def has_data():
 if not has_data():
     st.warning("No vendor data yet. Click the button to download the public lists and build the database "
                "(takes about a minute). If it fails, the message below says which source failed.")
+    up = st.file_uploader("Or upload a source file here (e.g. the FDA DMF .xls/.xlsx you downloaded)", type=["xls","xlsx"])
+    if up is not None and st.button("Use uploaded file"):
+        import ingest, pathlib
+        pathlib.Path("data/raw").mkdir(parents=True, exist_ok=True)
+        pathlib.Path("data/raw/fda_dmf.xls").write_bytes(up.getvalue())   # ingest detects xls vs xlsx by content
+        st.info("Merging... this can take a minute for the big FDA file.")
+        try:
+            ingest.main(); st.cache_data.clear(); st.rerun()
+        except BaseException as e:
+            st.error(f"Could not read the file: {e}. Column names in sources.yaml may not match this file.")
     if st.button("Build data now"):
         import fetch, ingest
         with st.spinner("Downloading and merging..."):
